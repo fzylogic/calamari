@@ -34,7 +34,7 @@ storage:
   require:
     - sls: virtualenv
 
-storage:
+log_storage:
   file:
    - directory
    - user: vagrant
@@ -42,3 +42,17 @@ storage:
    - name: /home/vagrant/calamari/dev/var/log/calamari
   require:
    - sls: virtualenv
+
+{% for config in ('calamari',
+                'cthulhu') %}
+
+log_rotate_configs:
+   file:
+    - copy
+    - user: vagrant
+    - name: /etc/logrotate.d/{{ config }}
+    - source: /home/vagrant/dev/etc/logrotate.d/{{ config }}
+   require:
+    - sls: build-deps
+
+{% endfor %}

@@ -34,4 +34,5 @@ build_deps:
       - python-m2crypto
       - python-crypto
       - reprepro
+      - logrotate
 

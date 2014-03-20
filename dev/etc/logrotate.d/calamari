@@ -1,0 +1,8 @@
+/home/vagrant/calamari/dev/var/log/calamari/calamari.log {
+    size 1k
+    create 700 vagrant vagrant
+    rotate 4
+    daily
+    compress
+    dateext
+}
