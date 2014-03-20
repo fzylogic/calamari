@@ -33,3 +33,12 @@ storage:
     - name: /home/vagrant/calamari/env/storage
   require:
     - sls: virtualenv
+
+storage:
+  file:
+   - directory
+   - user: vagrant
+   - makedirs: true
+   - name: /home/vagrant/calamari/dev/var/log/calamari
+  require:
+   - sls: virtualenv
