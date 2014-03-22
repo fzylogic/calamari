@@ -46,7 +46,7 @@ log_storage:
 {% for config in ('calamari',
                 'cthulhu') %}
 
-log_rotate_configs:
+log_rotate_configs_{{ config }}:
    file:
     - copy
     - user: vagrant
