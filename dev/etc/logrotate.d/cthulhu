@@ -1,8 +1,9 @@
 /home/vagrant/calamari/dev/var/log/calamari/cthulhu.log {
     size 1k
-    create 700 vagrant vagrant
+    create 664 vagrant vagrant
     rotate 4
     daily
     compress
     dateext
+    copytruncate
 }
