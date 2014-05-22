@@ -21,7 +21,6 @@ from cthulhu.manager import salt_config, config
 # The type name for hosts and osds in the CRUSH map (if users have their
 # own crush map they may have changed this), Ceph defaults are 'host' and 'osd'
 from calamari_common.types import OsdMap, MonMap, ServiceId
-from cthulhu.persistence.servers import Server, Service
 from cthulhu.util import now, SaltEventSource
 
 CRUSH_HOST_TYPE = config.get('cthulhu', 'crush_host_type')
@@ -278,10 +277,10 @@ class ServerMonitor(greenlet.Greenlet):
                 server_state = ServerState(hostname, hostname, managed=False,
                                            last_contact=None, boot_time=None, ceph_version=None)
                 self.inject_server(server_state)
-                self._persister.create_server(Server(
+                self._persister.create_server(
                     fqdn=server_state.fqdn,
                     hostname=server_state.hostname,
-                    managed=server_state.managed))
+                    managed=server_state.managed)
 
             for osd in osds:
                 service_id = ServiceId(osd_map['fsid'], 'osd', str(osd['osd']))
@@ -393,12 +392,12 @@ class ServerMonitor(greenlet.Greenlet):
                                        last_contact=now(), boot_time=boot_time,
                                        ceph_version=server_heartbeat['ceph_version'])
             self.inject_server(server_state)
-            self._persister.create_server(Server(
+            self._persister.create_server(
                 fqdn=server_state.fqdn,
                 hostname=server_state.hostname,
                 managed=server_state.managed,
                 last_contact=server_state.last_contact
-            ))
+            )
             log.info("Saw server %s for the first time" % server_state)
 
         server_state.last_contact = now()
@@ -464,12 +463,11 @@ class ServerMonitor(greenlet.Greenlet):
             service_state = ServiceState(*service_id)
             self.inject_service(service_state, server_state.fqdn)
 
-            self._persister.create_service(Service(
-                fsid=service_state.fsid,
-                service_type=service_state.service_type,
-                service_id=service_state.service_id,
-                status=json.dumps(status)
-            ), associate_fqdn=server_state.fqdn)
+            self._persister.create_service(server_state.fqdn,
+                                           fsid=service_state.fsid,
+                                           service_type=service_state.service_type,
+                                           service_id=service_state.service_id,
+                                           status=json.dumps(status))
 
         if running != service_state.running:
             if running:
